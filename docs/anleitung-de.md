@@ -32,16 +32,16 @@ Zur Zeit sind folgende Einschränkungen vorhanden:
 # Details zur Umsetzung
 
 Die Fragen werden zusammen mit den Antworten in Textform als Papierkarten an
-einem Board befestigt. Neben der Frage befinden sich vier festinstallierte
+einem Board befestigt. Neben der Frage befinden sich vier fest installierte
 Taster. Jeder der Taster repräsentiert somit eine mögliche Antwort. Daneben
 sind zwei Leuchtdioden (im folgenden als *LED* bezeichnet), die das Ergebnis
 der Antwort anzeigen.
 
 Die Anzahl der möglichen Fragen ist zur Zeit auf acht festgelegt. Die oben
-beschriebenen Blöcke aus Fragenkarte, Taster und LEDs werden vertikal
+beschriebenen Blöcke aus Fragekarte, Taster und LEDs werden vertikal
 untereinander angeordnet. Diese "Zeilen" bilden dann das komplette Quiz.
 
-Eine Reihenfolge beim Beantorten der Fragen muss *nicht* eingehalten werden.
+Eine Reihenfolge beim Beantworten der Fragen muss *nicht* eingehalten werden.
 
 Abseits dieser Tasten und LEDs befindet sich der Start-Knopf. Dieser startet
 ein neues Quiz. Ein laufender Durchgang wird hiermit ohne weitere Rückfrage
@@ -71,7 +71,7 @@ Spannungsversorgung komplett getrennt werden kann. Siehe Abschnitt
 ### Zustand "Idle"
 
 Nach dem Einschalten wartet das System auf den Start eines Quiz (Idle). Um
-dies anzuzeigen, blinkt die gelbe LED. Damit dies nicht zuviel Batterieladung
+dies anzuzeigen, blinkt die gelbe LED. Damit dies nicht zu viel Batterieladung
 verbraucht, blinkt die LED zu kurz auf. Es wird ein 1:5 Verhältnis verwendet.
 Die LED ist für 1/5 Sekunde an und für 4/5 Sekunden aus.
 
@@ -117,19 +117,20 @@ System automatisch abgeschaltet (Zustand "Stromsparen").
 
 ### Neustarten
 
-In jedem Zustand läßt sich das System mit der START-Taste erneut starten.
+In jedem Zustand lässt sich das System mit der START-Taste erneut starten.
 Eventuell laufende Abfragen werden abgebrochen. Bei aktiver Zeitüberwachung
 beginnt die Zeitzählung sofort nach diesem Start.
 
 
 # Die Spannungsversorgung
 
-Das System wahlweise mit einer Steckernetzteil oder einem Batterieblock mit
+Das System wird wahlweise mit einem Steckernetzteil oder einem Batterieblock mit
 Akkus betrieben. Die Spannung wird über einen eigenen Kippschalter geschaltet,
-sodass sich das System komplett von der Spannungsversorgung trennen läßt.
+sodass sich das System komplett von der Spannungsversorgung trennen lässt.
 
-Bei eingeschalteten System verfällt der Microcontroller bei Inaktivität in einen
-Stromsparmodus, in dem die Batterie fast nicht entladen wird.
+Bei eingeschalteten System verfällt der Microcontroller bei Inaktivität in
+einen Stromsparmodus, in dem die Batterie fast nicht entladen wird. Siehe
+Abschnitt *"Zustand 'Stromsparen'"*.
 
 
 # Historie des Dokuments
