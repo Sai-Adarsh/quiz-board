@@ -1,5 +1,5 @@
 % Anleitung zum "Puzzle-Board"
-% Joerg Desch
+% Joerg Desch (https://github.com/joede/puzzle-board)
 % draft-1
 
 # Über das Dokument
