@@ -92,9 +92,9 @@ Wenn die maximale Zeit für das Quiz aktiviert ist, beginnt die gelbe LED ca.
 15% vor Ablauf der Maximaldauer schneller zu blinken. Die Puls-Pausen-Zeit
 wechselt von einer Sekunde auf eine halbe Sekunde.
 
-**Hinweis:** Zur Zeit ist noch nicht definiert, wie eine Maximaldauer verändert
-werden kann. Aus dem Grund beträgt die Vorgabe zwei Minuten. Somit beginnt die
-LED 18 Sekunden (15%) vor dem Ablaufen an schneller zu blinken.
+> **Hinweis:** Zur Zeit ist noch nicht definiert, wie eine Maximaldauer verändert
+> werden kann. Aus dem Grund beträgt die Vorgabe zwei Minuten. Somit beginnt die
+> LED 18 Sekunden (15%) vor dem Ablaufen an schneller zu blinken.
 
 ### Zustand "Ergebnis"
 
@@ -113,3 +113,9 @@ System automatisch abgeschaltet.
 In jedem Zustand läßt sich das System mit der START-Taste erneut starten.
 Eventuell laufende Abfragen werden abgebrochen. Bei aktiver Zeitüberwachung
 beginnt die Zeitzählung sofort nach diesem Start.
+
+
+# Historie des Dokuments
+
+**draft-1**
+:    (2.5.2013) -- erster Entwurf des Dokuments
