@@ -4,9 +4,9 @@
 
 # Über das Dokument
 
-In diesem Dokument soll die Funktionsweise des "Puzzle-Board" aus Sicht eines
-Benutzer beschrieben werden. Es soll als Grundlage für die Entwicklung und als
-Dokumentation für den Betrieb genutzt werden.
+In diesem Dokument soll die Funktionsweise des "Puzzle-Board" aus Sicht
+eines Benutzer beschrieben werden. Es soll als Grundlage für die Entwicklung
+und in Grenzen als Dokumentation für den Betrieb genutzt werden.
 
 Dieses Dokument wird keine technischen Details beschreiben, die über den
 reinen Betrieb / die Benutzung hinausgehen.
@@ -26,6 +26,7 @@ Zur Zeit sind folgende Einschränkungen vorhanden:
 
 * jede Frage muss immer vier Antworten haben
 * ein Quiz besteht immer aus genau acht Fragen
+* die optionale Maximaldauer liegt fix bei zwei Minuten.
 
 
 # Details zur Umsetzung
@@ -40,9 +41,13 @@ Die Anzahl der möglichen Fragen ist zur Zeit auf acht festgelegt. Die oben
 beschriebenen Blöcke aus Fragenkarte, Taster und LEDs werden vertikal
 untereinander angeordnet. Diese "Zeilen" bilden dann das komplette Quiz.
 
-## Abfrage einer Anwort
+Abseits dieser Tasten und LEDs befindet sich der Start-Knopf. Dieser startet
+ein neues Quiz. Ein laufender Durchgang wird hiermit ohne weitere Rückfrage
+abgebrochen.
 
-Für jede Anwort gibt es nur eine richtige Anwort. Die Anwort wird das
+## Abfrage einer Antwort
+
+Für jede Anwort gibt es nur eine richtige Antwort. Die Antwort wird durch das
 Drücken des jeweiligen Tasters neben der Frage eingegeben. Nach der Eingabe
 der Antwort ist keine Änderung mehr möglich. Ein erneutes Drücken eines
 Tasters einer bereits beantworteten Frage wird ignoriert.
@@ -63,5 +68,48 @@ dies anzuzeigen blinkt die gelbe LED. Damit dies nicht zuviel Batterieladung
 verbraucht, blinkt die LED zu kurz auf. Es wird ein 1:5 Verhältnis verwendet.
 Die LED ist für 1/5 Sekunde an und für 4/5 Sekunden aus.
 
-Wir innerhalb einer Minute kein Quiz gestartet, schaltet sich das System wieder
-aus. Hierzu welchselt es in einen speziellen "Stromspar-Modus".
+### Zustand "Stromsparen"
+
+Wir im Zustand "Idle" nicht innerhalb einer Minute das Quiz gestartet, schaltet
+sich das System wieder aus. Bei einem laufenden Quiz erfolgt diese Abschaltung
+spätestens fünf Minuten nach dem letzten Tastendruck
+
+Abschalten bedeutet hier, dass das System in einen speziellen "Stromspar-Modus"
+welchselt. Hierzu wird der Microcontroller in einer Schlafmodus geschaltet, in
+dem er nahezu keine Energie benötigt. Aus diesem "Stromspar-Modus" kann direkt
+eines Quiz gestartet werden.
+
+Dieses Abschalten wird nicht visualisiert. Da Energie gespart werden soll, wird
+keine LED zur Anzeige verwendet.
+
+### Zustand "Abfrage"
+
+Der Zustand "Abfrage" ist der normale "laufende Betrieb". Das bedeutet, dass das
+Quiz läuft. Dieser Zustand wird durch eine gleichmäßig (1:1) blinkende gelbe LED
+anzeigt.
+
+Wenn die maximale Zeit für das Quiz aktiviert ist, beginnt die gelbe LED ca.
+15% vor Ablauf der Maximaldauer schneller zu blinken. Die Puls-Pausen-Zeit
+wechselt von einer Sekunde auf eine halbe Sekunde.
+
+**Hinweis:** Zur Zeit ist noch nicht definiert, wie eine Maximaldauer verändert
+werden kann. Aus dem Grund beträgt die Vorgabe zwei Minuten. Somit beginnt die
+LED 18 Sekunden (15%) vor dem Ablaufen an schneller zu blinken.
+
+### Zustand "Ergebnis"
+
+Ist die letzte Frage beantwortet, wird in den Zustand "Ergebnis" gewechselt.
+Die Funktion dieses Zustand ist eizig die Anzeige des Resultats. Sind alle
+Fragen richtig beantwortet, fangen alle grünen LED an im Gleichtakt (1:1)
+zu blinken.
+
+Ist nicht alle Anworten korrekt, blinken alle roten LED im Gleichtakt (1:1).
+
+Die Anzeige des Resultats erfolgt maximal für 30 Sekunden. Danach wird das
+System automatisch abgeschaltet.
+
+### Neustarten
+
+In jedem Zustand läßt sich das System mit der START-Taste erneut starten.
+Eventuell laufende Abfragen werden abgebrochen. Bei aktiver Zeitüberwachung
+beginnt die Zeitzählung sofort nach diesem Start.
