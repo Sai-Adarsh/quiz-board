@@ -128,7 +128,7 @@ Das System wird wahlweise mit einem Steckernetzteil oder einem Batterieblock mit
 Akkus betrieben. Die Spannung wird über einen eigenen Kippschalter geschaltet,
 sodass sich das System komplett von der Spannungsversorgung trennen lässt.
 
-Bei eingeschalteten System verfällt der Microcontroller bei Inaktivität in
+Bei eingeschaltetem System verfällt der Microcontroller bei Inaktivität in
 einen Stromsparmodus, in dem die Batterie fast nicht entladen wird. Siehe
 Abschnitt *"Zustand 'Stromsparen'"*.
 
