@@ -5,7 +5,9 @@ board to perfom a quiz or puzzle in public. This board is developed
 with NGO's in mind, working with the audience on the streets.
 
 The quiz is based on questions with 4 answers. Only one answer is
-correct. There are up to 8 questions possible.
+correct. There are up to 8 questions possible. The sketch below show
+a possible design of the board. The buttons aren't shown. They should be places
+within the gray area.
 
 ![sketch](https://raw.github.com/joede/quiz-board/master/docs/images/Puzzleboard-Sample.png)
 
