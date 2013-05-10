@@ -1,10 +1,10 @@
-% Anleitung zum "Puzzle-Board"
-% Joerg Desch (https://github.com/joede/puzzle-board)
+% Anleitung zum "Quiz-Board"
+% Joerg Desch (https://github.com/joede/quiz-board)
 % draft-1
 
 # Über das Dokument
 
-In diesem Dokument soll die Funktionsweise des "Puzzle-Board" aus Sicht
+In diesem Dokument soll die Funktionsweise des "Quiz-Board" aus Sicht
 eines Benutzer beschrieben werden. Es soll als Grundlage für die Entwicklung
 und in Grenzen als Dokumentation für den Betrieb genutzt werden.
 
@@ -14,7 +14,7 @@ reinen Betrieb / die Benutzung hinausgehen.
 
 # Ziel des Projekt
 
-Das Projekt "Puzzle-Board" soll ein von einem Microcontroller gesteuertes
+Das Projekt "Quiz-Board" soll ein von einem Microcontroller gesteuertes
 Quiz realisieren. In diesem Quiz werden dem Befragten verschiedene Fragen
 mit möglichen Antworten präsentiert. Diese Fragen gilt es zu beantworten.
 Das Resultat jeder Antwort wird umgehend angezeigt. Sind alle Fragen
@@ -40,6 +40,10 @@ der Antwort anzeigen.
 Die Anzahl der möglichen Fragen ist zur Zeit auf acht festgelegt. Die oben
 beschriebenen Blöcke aus Fragekarte, Taster und LEDs werden vertikal
 untereinander angeordnet. Diese "Zeilen" bilden dann das komplette Quiz.
+
+![Skizze der Anordnung der Elemente des Board. Die Farbgebung ist eine
+Möglichkeit die Fragen und die LED zu gruppieren. Auf die Darstellung der Taster
+in dem grau hinterlegten Feld wurde in der Skizze verzichtet.](images/Puzzleboard-Sample.eps)
 
 Eine Reihenfolge beim Beantworten der Fragen muss *nicht* eingehalten werden.
 
@@ -136,4 +140,4 @@ Abschnitt *"Zustand 'Stromsparen'"*.
 # Historie des Dokuments
 
 **draft-1**
-:    (2.5.2013) -- erster Entwurf des Dokuments
+:    (10.5.2013) -- erster überarbeiter Entwurf des Dokuments
