@@ -20,6 +20,9 @@ Since we need a larger number of IOs, we will use a
 [Arduino Mega 2560](http://arduino.cc/en/Main/arduinoBoardMega2560)
 board.
 
+
+## Features
+
 Planned features are:
 
 * stand-alone usage without a PC
@@ -31,3 +34,12 @@ Planned features are:
 a environmental (protection) organisation. Because of this, all further documents
 are written in German. If there is interest from outside of Germany, I may
 add an english translation. Feel free to send me your translations.
+
+
+## License
+
+EN: This work is licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](href="http://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+DE: Dieses Werk bzw. Inhalt steht unter einer [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de").
+
+!Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)
