@@ -42,4 +42,4 @@ EN: This work is licensed under a [Creative Commons Attribution-NonCommercial-Sh
 
 DE: Dieses Werk bzw. Inhalt steht unter einer [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de").
 
-!Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)
+![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)
