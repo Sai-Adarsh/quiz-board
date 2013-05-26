@@ -1,4 +1,4 @@
-# The Puzzle Board
+# The Quiz Board
 
 The aim of this project is the development of a microcontroller based
 board to perfom a quiz or puzzle in public. This board is developed
