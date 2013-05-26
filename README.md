@@ -20,6 +20,12 @@ Since we need a larger number of IOs, we will use a
 [Arduino Mega 2560](http://arduino.cc/en/Main/arduinoBoardMega2560)
 board.
 
+One important goal of the project is a simple and lean design. It should be easy
+for new and unexperienced developers to get familiar with the code. For this
+reason, I try to avoid heavy weight libraries in favour of simple and straight
+solutions (remember the [KISS](http://en.wikipedia.org/wiki/KISS_principle)
+principle).
+
 
 ## Features
 
