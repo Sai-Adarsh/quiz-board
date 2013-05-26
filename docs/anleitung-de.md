@@ -1,6 +1,6 @@
 % Anleitung zum "Quiz-Board"
 % Joerg Desch (https://github.com/joede/quiz-board)
-% draft-1
+% Revision R.1
 
 # Über das Dokument
 
@@ -140,4 +140,9 @@ Abschnitt *"Zustand 'Stromsparen'"*.
 # Historie des Dokuments
 
 **draft-1**
-:    (10.5.2013) -- erster überarbeiter Entwurf des Dokuments
+:    erster überarbeiter Entwurf des Dokuments. (10.5.2013/jd)
+
+**R.1**
+:    Freigabe der hier beschriebenen Funktionalität. Die Umsetzung der
+     erweiterten Funktionen sind optional und hängen von der zur Verfügung
+     stehenden Zeit ab. (26.5.2013/jd)
