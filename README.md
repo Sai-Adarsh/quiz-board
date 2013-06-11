@@ -6,8 +6,7 @@ with NGO's in mind, working with the audience on the streets.
 
 The quiz is based on questions with 4 answers. Only one answer is
 correct. There are up to 8 questions possible. The sketch below show
-a possible design of the board. The buttons aren't shown. They should be places
-within the gray area.
+a possible design of the board. The buttons could be places within the gray area.
 
 ![sketch](https://raw.github.com/joede/quiz-board/master/docs/images/Puzzleboard-Sample--en.png)
 
@@ -15,6 +14,9 @@ The answer is given by pressing one of four buttons. The result is
 shown immediately through a red or green LED. The puzzle is done as soon
 as all questions got an answer. As an additional option, a time limit
 can be enabled, so that all answers must be given within this time period.
+
+To show the state of the operation of the board, a system wide yellow LED is planned.
+The sketch above doesn't show this LED.
 
 Since we need a larger number of IOs, we will use a
 [Arduino Mega 2560](http://arduino.cc/en/Main/arduinoBoardMega2560)
