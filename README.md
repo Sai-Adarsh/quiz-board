@@ -9,7 +9,7 @@ correct. There are up to 8 questions possible. The sketch below show
 a possible design of the board. The buttons aren't shown. They should be places
 within the gray area.
 
-![sketch](https://raw.github.com/joede/quiz-board/master/docs/images/Puzzleboard-Sample.png)
+![sketch](https://raw.github.com/joede/quiz-board/master/docs/images/Puzzleboard-Sample--en.png)
 
 The answer is given by pressing one of four buttons. The result is
 shown immediately through a red or green LED. The puzzle is done as soon
