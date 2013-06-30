@@ -39,7 +39,8 @@ to an 200 ohm resistor. The other end is routed to an output pin of the MCU.
 A low level at this output lets the LED glow.
 
 We don't use the analog inputs. So we connect the 16 (2x8) LEDs to the analog
-inputs `A0` to `A15`. The pins are used as GPIO instead.
+inputs `A0` to `A15`. The pins are used as GPIO instead. The yellow status LED
+is connected to pin 11.
 
 ![wiring](https://raw.github.com/joede/quiz-board/master/docs/images/Wiring-sketch.png)
 
@@ -64,3 +65,32 @@ In the end, we need one place where all the implementations are included in
 The only other solution would be a *library* which must be stored in the Arduino
 toolchain path. In my opinion, this solution should only be chosen for
 independent code.
+
+**Sample Header File:** the sample shows the class declaration and the code
+implementation with the `ifdef`.
+
+~~~~~
+// file QuizBoard.h
+class QuizBoard
+{
+    static int ListOfLEDs[];
+    void setLED(int nr, bool state);
+}
+
+#ifdef __ALLOC_STATICS_HERE__
+int QuizBoard::ListOfLEDs [] = {..};
+void QuizBoard::setLED ( int nr, bool state )
+{ ... }
+#endif
+~~~~~
+
+**Sample INO file:** the sample shows the usage of the class. The define of
+`__ALLOC_STATICS_HERE__` enables the code implementation inside this project.
+
+~~~~~
+// file Sample.ino
+#define __ALLOC_STATICS_HERE__ 1
+#include "QuizBoard.h"
+
+QuizBoard BoardTest;
+~~~~~
