@@ -48,14 +48,14 @@ add an english translation. Feel free to send me your translations.
 
 ### Software
 
-EN: Unless otherwise stated, all software or program code and all snippets are licensed unter the [GNU GPL 3.0](http://www.gnu.org/licenses/gpl).
+EN: Unless otherwise stated, all software or program code and all snippets are licensed under the [GNU GPL 3.0](http://www.gnu.org/licenses/gpl).
 
-DE: Sofern nicht anders angegeben, stehen alle Programme oder Programcode sowie alle Code-Schnipsel unter [GNU GPL 3.0](http://www.gnu.org/licenses/gpl).
+DE: Sofern nicht anders angegeben, stehen alle Programme oder Programcode sowie alle Code-Schnipsel unter der [GNU GPL 3.0](http://www.gnu.org/licenses/gpl).
 
 ### Documentation
 
 EN: Unless otherwise stated, all documents like manuals, specifications or instructions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](href="http://creativecommons.org/licenses/by-nc-sa/3.0/).
 
-DE: Sofern nicht anderes angegeben, stehen alle Dokumente wie Handbücher, Anleitungen oder spezifikationenrk unter einer [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de").
+DE: Sofern nicht anderes angegeben, stehen alle Dokumente wie Handbücher, Anleitungen oder Spezifikationen unter einer [Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.de").
 
 ![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png)
