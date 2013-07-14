@@ -94,3 +94,18 @@ void QuizBoard::setLED ( int nr, bool state )
 
 QuizBoard BoardTest;
 ~~~~~
+
+
+### C++ design issues
+
+Even if we use C++ to implement this project, we are running it on an
+microcontroller. This means, not all feature of C++ are usefull if the
+target is a embdedd 8-bit system.
+
+We avoid things like C++ callbacks (functors) or listener classes with
+virtual methods. If a normal API doesn't the job, normal C callback should be
+prefered. Shure, this is not as nice as the variants mentioned before, but
+it is much easier to understand and is costs less ressources.
+
+One example of such a "work arond" is the class SimpleTimer. Insteas of using
+a listener interface, the methods are designed to query the occured events.
