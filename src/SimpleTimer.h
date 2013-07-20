@@ -172,7 +172,7 @@ int SimpleTimer::getEvent ( void )
 	// a timer is defined and it's done?
 	if ( m_Timer[i].id>0 && m_Timer[i].occured )
 	{
-	    // so remember its ID
+	    // so remember it's ID
 	    rc = m_Timer[i].id;
 	    if ( m_Timer[i].reload > 0 )
 	    {
@@ -182,7 +182,7 @@ int SimpleTimer::getEvent ( void )
 	    }
 	    else
 	    {
-		// or clear its slot and return its ID,
+		// or clear it's slot and return it's ID,
 		m_Timer[i].id = 0;
 		m_Timer[i].ticks = 0UL;
 		m_Timer[i].reload = 0;
