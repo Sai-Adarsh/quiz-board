@@ -27,6 +27,10 @@
 #ifndef __QB__CONFIG_H__
 #define __QB__CONFIG_H__
 
+// uncomment to build the DEBUGGING release
+#define DEBUG 1
+
+
 /*             .-----------------------------------------------.             */
 /* ___________/  CONFIGURATION OF THE SOURCE                    \___________ */
 /*            `-------------------------------------------------'            */

@@ -107,7 +107,11 @@ class QuizGame
 
 QuizGame::QuizGame()
 {
+#ifdef DEBUG
     m_dbg.setLevel(SimpleLogging::LVL_DEBUG);
+#else
+    m_dbg.setLevel(SimpleLogging::LVL_WARNING);
+#endif
     m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGame::QuizGame");
     m_UseSet = 0;
     m_NumUnAnswered = CFG_MAX_QUESTIONS;
@@ -218,11 +222,22 @@ bool QuizGame::success ( void )
 
 QuizGame::SolutionSet QuizGame::m_SolutionSet[CFG_MAX_SOLUTIONSETS] =
 {
+#ifdef DEBUG
     // these sets are just debbuging sets...
-    {1,2,3,4,5,6,7,8},
-    {8,7,6,5,4,3,2,1},
-    {1,2,8,7,3,4,5,6},
-    {2,1,4,3,6,5,8,7}
+    {1,2,3,4,1,2,3,4},
+    {4,3,2,1,4,3,2,1},
+    {1,2,1,2,3,4,3,4},
+    {4,3,4,3,2,1,2,1}
+#else
+    // set #0
+    {4,1,4,3,2,1,4,1},
+    // set #1
+    {4,3,3,1,1,3,1,2},
+    // set #2
+    {1,3,2,2,1,2,4,3},
+    // set #3
+    {1,3,1,1,4,4,1,3}
+#endif
 };
 
 #endif // __ALLOC_STATICS_HERE__

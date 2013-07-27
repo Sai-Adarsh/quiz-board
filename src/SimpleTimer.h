@@ -128,7 +128,11 @@ class SimpleTimer
 
 SimpleTimer::SimpleTimer()
 {
+#ifdef DEBUG
     m_dbg.setLevel(SimpleLogging::LVL_DEBUG);
+#else
+    m_dbg.setLevel(SimpleLogging::LVL_WARNING);
+#endif
     m_dbg.log(SimpleLogging::LVL_DEBUG,"SimpleTimer::SimpleTimer");
     m_NumTimers = 0;
     m_EventsOccured = 0;

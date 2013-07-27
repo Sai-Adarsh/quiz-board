@@ -24,12 +24,12 @@
  *
  * The levels should be used for:
  *
- * CRIT		Critical conditions: the program stops right after this.
+ * CRITICAL	Critical conditions: the program stops right after this.
  *		Only use this if the program is exited from the current
  *		function.
  * ERROR	Error conditions: serious problem, program continues.
  *		Use just before you return -1 from a function.
- * WARN		Warning conditions: request user to fix this problem.
+ * WARNING	Warning conditions: request user to fix this problem.
  *		Ex: What a queer port did you select.
  * NOTICE	Normal but significant condition:
  *		Ex: What options have been set.
@@ -73,7 +73,7 @@ class SimpleLogging
    * inner data types
    */
   public:
-    enum LOGLEVEL {LVL_CRITICAL=0, LVL_ERROR, LVL_WARN, LVL_NOTICE, LVL_INFO, LVL_DEBUG};
+    enum LOGLEVEL {LVL_CRITICAL=0, LVL_ERROR, LVL_WARNING, LVL_NOTICE, LVL_INFO, LVL_DEBUG};
 
   /* --------------------------------------------
    * constants declarations

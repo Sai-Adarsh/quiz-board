@@ -92,7 +92,7 @@ class QuizBoard
     int CurrentKeyPressed;
     int CurrentKeyChecked;
     long LastReadTime;
-    SimpleLogging qb_dbg;
+    SimpleLogging m_dbg;
 
 
 
@@ -114,7 +114,7 @@ class QuizBoard
     {
         if ( CurrentKeyPressed!=KEY_NONE && CurrentKeyChecked!=KEY_NONE )
         {
-            qb_dbg.log(SimpleLogging::LVL_CRITICAL,"illegal transit state!");
+            m_dbg.log(SimpleLogging::LVL_CRITICAL,"illegal transit state!");
         }
     };
 
@@ -125,7 +125,7 @@ class QuizBoard
         if ( KeyNr < 0 || KeyNr >= OffsetRegularKeys )
 	    return 0;
         i = (KeyNr>>2)+1;
-        qb_dbg.log(SimpleLogging::LVL_DEBUG,"k=%d q=%d",KeyNr,i);
+        m_dbg.log(SimpleLogging::LVL_DEBUG,"k=%d q=%d",KeyNr,i);
         return i>MAX_QUESTIONS ? 0 : i;
     };
 
@@ -136,7 +136,7 @@ class QuizBoard
 	if ( KeyNr < 0 || KeyNr >= OffsetRegularKeys )
 	    return 0;
 	i = (KeyNr&0x0003)+1;
-	qb_dbg.log(SimpleLogging::LVL_DEBUG,"k=%d a=%d",KeyNr,i);
+	m_dbg.log(SimpleLogging::LVL_DEBUG,"k=%d a=%d",KeyNr,i);
 	return i>MAX_ANSWERS ? 0 : i;
     };
 
@@ -162,8 +162,12 @@ bool QuizBoard::setup ( void )
 {
     int i;
 
-    qb_dbg.setLevel(SimpleLogging::LVL_DEBUG);
-    qb_dbg.log(SimpleLogging::LVL_DEBUG,"QuizBoard::setup");
+#ifdef DEBUG
+    m_dbg.setLevel(SimpleLogging::LVL_DEBUG);
+#else
+    m_dbg.setLevel(SimpleLogging::LVL_WARNING);
+#endif
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizBoard::setup");
 
     /* count the number of keys.
      */
@@ -177,12 +181,12 @@ bool QuizBoard::setup ( void )
     }
     if ( i <= 0 )
     {
-	qb_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard: illegal number of keys in list!");
+	m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard: illegal number of keys in list!");
 	return false;
     }
     else
 	NumOfKeys = i;
-    qb_dbg.log(SimpleLogging::LVL_DEBUG,"Found %d key definitions!",NumOfKeys);
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"Found %d key definitions!",NumOfKeys);
 
     /* count the number of LEDs.
      */
@@ -196,12 +200,12 @@ bool QuizBoard::setup ( void )
     }
     if ( i <= 0 )
     {
-	qb_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard: illegal number of LEDs in list!");
+	m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard: illegal number of LEDs in list!");
 	return false;
     }
     else
 	NumOfLEDs = i;
-    qb_dbg.log(SimpleLogging::LVL_DEBUG,"Found %d LED definitions!",NumOfLEDs);
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"Found %d LED definitions!",NumOfLEDs);
 
     // loop through the list and set INPUTs nad OUTPUTs
     for ( i=0; i<NumOfKeys; i++ )
@@ -228,7 +232,7 @@ void QuizBoard::setLED ( int nr, bool state )
     }
     else
     {
-	qb_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard::setLED: bad parm\n");
+	m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard::setLED: bad parm\n");
     }
 }
 
@@ -248,7 +252,7 @@ int QuizBoard::waitKey (void)
     if ( CurrentKeyPressed != KEY_NONE )
     {
         kstate = digitalRead(ListOfKeys[CurrentKeyPressed].pin);
-        //qb_dbg.log(SimpleLogging::LVL_DEBUG,"rel?=%d",CurrentKeyPressed);
+        //m_dbg.log(SimpleLogging::LVL_DEBUG,"rel?=%d",CurrentKeyPressed);
         if ( kstate == HIGH )
 	    CurrentKeyPressed = KEY_NONE;
         return KEY_NONE;                             // still pressed, so there's no change.
@@ -266,7 +270,7 @@ int QuizBoard::waitKey (void)
                 if ( kstate == LOW )
                 {
                     // stop searching, we have found a candidate.
-                    //qb_dbg.log(SimpleLogging::LVL_DEBUG,"new?=%d",i);
+                    //m_dbg.log(SimpleLogging::LVL_DEBUG,"new?=%d",i);
                     CurrentKeyChecked = i;
                     return KEY_NONE;                       // still not "officially" pressed..
                 }
@@ -285,7 +289,7 @@ int QuizBoard::waitKey (void)
             {
                 // the key isn't pressed anymore
                 CurrentKeyChecked = KEY_NONE;
-                //qb_dbg.log(SimpleLogging::LVL_DEBUG,"lost=%d",i);
+                //m_dbg.log(SimpleLogging::LVL_DEBUG,"lost=%d",i);
             }
         }
     }
