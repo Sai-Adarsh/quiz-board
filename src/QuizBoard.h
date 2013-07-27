@@ -64,6 +64,7 @@ class QuizBoard
     enum LED {LED_RED1=0, LED_RED2, LED_RED3, LED_RED4, LED_RED5, LED_RED6, LED_RED7, LED_RED8,
               LED_GREEN1, LED_GREEN2, LED_GREEN3, LED_GREEN4, LED_GREEN5, LED_GREEN6, LED_GREEN7, LED_GREEN8,
               LED_STATUS, LED_ALIVE };
+    enum ANSWER_STATES {ANS_NONE=0, ANS_WRONG, ANS_CORRECT, MAX_ANSWER_STATES};
     enum KEY {KEY_REGULAR_KEYS=100, KEY_START };
     struct KeyDefinition { int pin; int keycode; };
 
@@ -145,11 +146,13 @@ class QuizBoard
 	return ( KeyNr >= OffsetRegularKeys ) ? true : false;
     }
 
-    bool setup (void);
+    bool setup ( void );
 
-    void setLED(int nr, bool state);
+    void setLED ( int nr, bool state );
 
-    int waitKey(void);
+    void showAnswer ( int question, int AnswerState );
+
+    int waitKey ( void );
 };
 
 
@@ -235,6 +238,55 @@ void QuizBoard::setLED ( int nr, bool state )
 	m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard::setLED: bad parm\n");
     }
 }
+
+/* Set the LEDs of the passed question to the passed state.
+ */
+void QuizBoard::showAnswer ( int question, int AnswerState )
+{
+    if ( AnswerState<ANS_NONE || AnswerState>=MAX_ANSWER_STATES )
+    {
+	m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard::showAnswer: bad parm\n");
+	return;
+    }
+    switch (question)
+    {
+	case 1:
+	    setLED(LED_RED1,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN1,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 2:
+	    setLED(LED_RED2,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN2,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 3:
+	    setLED(LED_RED3,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN3,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 4:
+	    setLED(LED_RED4,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN4,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 5:
+	    setLED(LED_RED5,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN5,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 6:
+	    setLED(LED_RED6,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN6,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 7:
+	    setLED(LED_RED7,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN7,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	case 8:
+	    setLED(LED_RED8,(AnswerState==ANS_WRONG)?true:false);
+	    setLED(LED_GREEN8,(AnswerState==ANS_CORRECT)?true:false);
+	    break;
+	default:
+	    m_dbg.log(SimpleLogging::LVL_ERROR,"ERROR: QuizBoard::showAnswer: bad parm\n");
+    }
+}
+
 
 /* Wait for a key to be pressed. The newly pressed key is returned. If no key
  * is pressed or if the previous key is hold pressed, the function returns
