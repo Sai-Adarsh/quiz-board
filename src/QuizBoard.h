@@ -148,7 +148,7 @@ class QuizBoard
 
     bool setup ( void );
 
-    void setLED ( int nr, bool state );
+    void setLED ( int nr, bool new_state );
 
     void showAnswer ( int question, int AnswerState );
 
@@ -227,11 +227,11 @@ bool QuizBoard::setup ( void )
 /* Simple set one of the LEDs.
  *
  */
-void QuizBoard::setLED ( int nr, bool state )
+void QuizBoard::setLED ( int nr, bool new_state )
 {
     if ( nr>=0 && nr<=NumOfLEDs )
     {
-	digitalWrite(ListOfLEDs[nr],state);
+	digitalWrite(ListOfLEDs[nr],new_state?LOW:HIGH);
     }
     else
     {
