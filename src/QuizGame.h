@@ -121,12 +121,13 @@ QuizGame::QuizGame()
 
 void QuizGame::startGame ( int AnswerSet )
 {
-    if ( AnswerSet<0 || AnswerSet>CFG_MAX_SOLUTIONSETS )
+    if ( AnswerSet<0 || AnswerSet>=CFG_MAX_SOLUTIONSETS )
     {
 	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGame::startGame: invalid AnswerSet! use default.");
 	m_UseSet = 0;
     }
-    m_UseSet = AnswerSet;
+    else
+        m_UseSet = AnswerSet;
     m_NumUnAnswered = CFG_MAX_QUESTIONS;
     for ( int i=0; i<CFG_MAX_QUESTIONS; i++ )
 	m_GivenAnswer[i] = 0;
@@ -204,6 +205,7 @@ int QuizGame::questionAnswered ( int question )
 
     // compare the result
     CorrectAnswer = m_SolutionSet[m_UseSet].CorrectAnswer[question];
+    // m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGame::questionAnswered: %d==%d?",m_GivenAnswer[question],CorrectAnswer);
     return (m_GivenAnswer[question]==CorrectAnswer) ? RES_CORRECT:RES_WRONG;
 }
 
@@ -211,7 +213,7 @@ int QuizGame::questionAnswered ( int question )
  */
 bool QuizGame::success ( void )
 {
-    for ( int i=0; i<CFG_MAX_QUESTIONS; i++ )
+    for ( int i=1; i<=CFG_MAX_QUESTIONS; i++ )
     {
 	if ( questionAnswered(i)!=2 )
 	    return false;
