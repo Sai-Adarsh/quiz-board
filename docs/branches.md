@@ -8,20 +8,25 @@ While "permanent branches" have a unlimited lifespan, the lifespan of
 
 ## Permanent branches
 
-The default branch is "master" as in every project managed with GIT.
+The default branch is ``master`` as in every project managed with GIT.
 
-The second branch to mention is develop. This is the branch where all the
+The second branch to mention is ``develop``. This is the branch where all the
 development is done. If a new final version is ready for release, the state
 of the development branch is the base for a release (see release branches below).
 
 I call these two branches "permanent" branches, because they will never be
 deleted.
 
+Neither ``master`` nore ``develop`` should be used for simple *checkpoint
+commits*. While ``master`` should only be merged with *release branches*,
+the development should be done within the *temporary branches*. Depending on
+the type of this temporary branch, they are merged back i.e. to ``develop``.
+
 
 ## Temporary branches
 
-In contrast to *permanent branches*, there are so called *temporary
-branches*. These branches are created (most of the time from develop) at some
+In contrast to *permanent branches*, there are so called *temporary branches*.
+These branches are created (most of the time from ``develop``) at some
 time for some special reason. After a while, these branches are merged back
 to develop or they are deleted. This depends on the task of the development
 behind the branch.
