@@ -148,6 +148,8 @@ class QuizBoard
 
     bool setup ( void );
 
+    void disableLEDs ( void ):
+
     void setLED ( int nr, bool new_state );
 
     void showAnswer ( int question, int AnswerState );
@@ -222,6 +224,14 @@ bool QuizBoard::setup ( void )
     }
 
     return true;
+}
+
+bool QuizBoard::disableLEDs ( void )
+{
+    for ( int i=0; i<NumOfLEDs; i++ )
+    {
+	digitalWrite(ListOfLEDs[i],HIGH);         // disable LED
+    }
 }
 
 /* Simple set one of the LEDs.
