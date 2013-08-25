@@ -121,6 +121,7 @@ QuizGame::QuizGame()
 
 void QuizGame::startGame ( int AnswerSet )
 {
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGame::startGame");
     if ( AnswerSet<0 || AnswerSet>=CFG_MAX_SOLUTIONSETS )
     {
 	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGame::startGame: invalid AnswerSet! use default.");

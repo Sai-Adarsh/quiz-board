@@ -423,7 +423,7 @@ int QuizBoard::ListOfLEDs [] =
     // "green" LEDs for correct answers
     A8, A9, A10, A11, A12, A13, A14, A15,
     // other LEDs
-    11, 13,
+    11, 13,					// LED_STATUS, LED_ALIVE
     -1
 };
 
