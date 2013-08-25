@@ -91,7 +91,7 @@ class QuizGame
   public:
 
     QuizGame();
-
+    void stopGame ( void );
     void startGame ( int AnswerSet );
     bool gameFinished ( void );
     bool giveAnswer ( int question, int answer );
@@ -113,6 +113,11 @@ QuizGame::QuizGame()
     m_dbg.setLevel(SimpleLogging::LVL_WARNING);
 #endif
     m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGame::QuizGame");
+    stopGame();
+}
+
+void QuizGame::stopGame ( void )
+{
     m_UseSet = 0;
     m_NumUnAnswered = CFG_MAX_QUESTIONS;
     for ( int i=0; i<CFG_MAX_QUESTIONS; i++ )
