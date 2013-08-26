@@ -133,7 +133,6 @@ SimpleTimer::SimpleTimer()
 #else
     m_dbg.setLevel(SimpleLogging::LVL_WARNING);
 #endif
-    m_dbg.log(SimpleLogging::LVL_DEBUG,"SimpleTimer::SimpleTimer");
     m_NumTimers = 0;
     m_EventsOccured = 0;
     // m_LocalTicker = 0UL;

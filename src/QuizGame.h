@@ -112,7 +112,6 @@ QuizGame::QuizGame()
 #else
     m_dbg.setLevel(SimpleLogging::LVL_WARNING);
 #endif
-    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGame::QuizGame");
     stopGame();
 }
 
@@ -149,7 +148,7 @@ bool QuizGame::gameFinished ( void )
 
 /* Pass a given answer to the game. The method returns false, if the answer
  * is not excepted. After counting a valid answer, the answer is stored
- * Use questionAnswered() o get the result. Use success() to check if the
+ * Use questionAnswered() to get the result. Use gameFinished() to check if the
  * the game is done.
  */
 bool QuizGame::giveAnswer ( int question, int answer )

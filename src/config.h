@@ -40,6 +40,13 @@
 #define CFG_MAX_QUESTIONS     8
 #define CFG_MAX_SOLUTIONSETS  4
 
+#define CFG_WANT_GAME_TIMEOUT 1
+#if CFG_WANT_GAME_TIMEOUT
+#  define CFG_GAME_TIMEOUT		(5*60)		// 5 minutes game play
+#  define CFG_GAME_TIMEOUT_WARN		(4*60)		// warn after 4 minutes
+#endif
+
+
 //}}}
 
 /*             .-----------------------------------------------.             */

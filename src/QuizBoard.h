@@ -148,7 +148,7 @@ class QuizBoard
 
     bool setup ( void );
 
-    void disableLEDs ( void ):
+    void disableLEDs ( void );
 
     void setLED ( int nr, bool new_state );
 
@@ -226,7 +226,7 @@ bool QuizBoard::setup ( void )
     return true;
 }
 
-bool QuizBoard::disableLEDs ( void )
+void QuizBoard::disableLEDs ( void )
 {
     for ( int i=0; i<NumOfLEDs; i++ )
     {
