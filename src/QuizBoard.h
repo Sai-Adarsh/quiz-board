@@ -417,7 +417,7 @@ QuizBoard::KeyDefinition QuizBoard::ListOfKeys[] =
     { pin:53, keycode:QB_GENKCODE(8,4) },
 
     // other (regular) keys
-    { pin:53, keycode:KEY_START },
+    { pin:8, keycode:KEY_START },
 
     { pin:-1, keycode:-1 }
 };
