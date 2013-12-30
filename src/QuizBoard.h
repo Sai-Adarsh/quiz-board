@@ -314,9 +314,13 @@ int QuizBoard::waitKey (void)
     if ( CurrentKeyPressed != KEY_NONE )
     {
         kstate = digitalRead(ListOfKeys[CurrentKeyPressed].pin);
-        //m_dbg.log(SimpleLogging::LVL_DEBUG,"rel?=%d",CurrentKeyPressed);
+        //m_dbg.log(SimpleLogging::LVL_DEBUG,"**rel?=%d",CurrentKeyPressed);
         if ( kstate == HIGH )
+        {
+            //m_dbg.log(SimpleLogging::LVL_DEBUG,"**release=#%d",CurrentKeyPressed);
 	    CurrentKeyPressed = KEY_NONE;
+            CurrentKeyChecked = KEY_NONE;
+        }
         return KEY_NONE;                             // still pressed, so there's no change.
     }
     else
@@ -332,7 +336,7 @@ int QuizBoard::waitKey (void)
                 if ( kstate == LOW )
                 {
                     // stop searching, we have found a candidate.
-                    //m_dbg.log(SimpleLogging::LVL_DEBUG,"new?=%d",i);
+                    //m_dbg.log(SimpleLogging::LVL_DEBUG,"**new?=%d",i);
                     CurrentKeyChecked = i;
                     return KEY_NONE;                       // still not "officially" pressed..
                 }
@@ -351,17 +355,19 @@ int QuizBoard::waitKey (void)
             {
                 // the key isn't pressed anymore
                 CurrentKeyChecked = KEY_NONE;
-                //m_dbg.log(SimpleLogging::LVL_DEBUG,"lost=%d",i);
+                //m_dbg.log(SimpleLogging::LVL_DEBUG,"**lost=%d",i);
             }
         }
     }
-    return CurrentKeyPressed;
+    //if ( CurrentKeyPressed != KEY_NONE )
+    //    m_dbg.log(SimpleLogging::LVL_DEBUG,"**pressed=#%d",CurrentKeyPressed);
+    return ListOfKeys[CurrentKeyPressed].keycode;
 }
 
 /* generate a keycode out of the question and answer numbers.
  * Both parameters are counting from 1 but stored counting from 0!
  */
-#define QB_GENKCODE(question,answer) (((((question)&0x0007)-1)<<2)|(((answer)&0x0003)-1))
+#define QB_GENKCODE(question,answer) (((((question)-1)&0x0007)<<2)|(((answer)-1)&0x0003))
 
 /* List of pin numbers with all the keys. The order must match the key
  * code of the enum QuizBoard::KEY!
