@@ -374,53 +374,53 @@ int QuizBoard::waitKey (void)
  */
 QuizBoard::KeyDefinition QuizBoard::ListOfKeys[] =
 {
-    // answer keys for question #1
-    { pin:22, keycode:QB_GENKCODE(1,1) },
-    { pin:23, keycode:QB_GENKCODE(1,2) },
-    { pin:24, keycode:QB_GENKCODE(1,3) },
-    { pin:25, keycode:QB_GENKCODE(1,4) },
+    // answer keys for question  #8
+    { pin:22, keycode:QB_GENKCODE(8,4) },
+    { pin:23, keycode:QB_GENKCODE(8,3) },
+    { pin:24, keycode:QB_GENKCODE(8,2) },
+    { pin:25, keycode:QB_GENKCODE(8,1) },
 
-    // answer keys for question #2
-    { pin:26, keycode:QB_GENKCODE(2,1) },
-    { pin:27, keycode:QB_GENKCODE(2,2) },
-    { pin:28, keycode:QB_GENKCODE(2,3) },
-    { pin:29, keycode:QB_GENKCODE(2,4) },
+    // answer keys for question  #7
+    { pin:26, keycode:QB_GENKCODE(7,4) },
+    { pin:27, keycode:QB_GENKCODE(7,3) },
+    { pin:28, keycode:QB_GENKCODE(7,2) },
+    { pin:29, keycode:QB_GENKCODE(7,1) },
 
-    // answer keys for question #3
-    { pin:30, keycode:QB_GENKCODE(3,1) },
-    { pin:31, keycode:QB_GENKCODE(3,2) },
-    { pin:32, keycode:QB_GENKCODE(3,3) },
-    { pin:33, keycode:QB_GENKCODE(3,4) },
+    // answer keys for question  #6
+    { pin:30, keycode:QB_GENKCODE(6,4) },
+    { pin:31, keycode:QB_GENKCODE(6,3) },
+    { pin:32, keycode:QB_GENKCODE(6,2) },
+    { pin:33, keycode:QB_GENKCODE(6,1) },
 
-    // answer keys for question #4
-    { pin:34, keycode:QB_GENKCODE(4,1) },
-    { pin:35, keycode:QB_GENKCODE(4,2) },
-    { pin:36, keycode:QB_GENKCODE(4,3) },
-    { pin:37, keycode:QB_GENKCODE(4,4) },
+    // answer keys for question  #5
+    { pin:34, keycode:QB_GENKCODE(5,4) },
+    { pin:35, keycode:QB_GENKCODE(5,3) },
+    { pin:36, keycode:QB_GENKCODE(5,2) },
+    { pin:37, keycode:QB_GENKCODE(5,1) },
 
-    // answer keys for question #5
-    { pin:38, keycode:QB_GENKCODE(5,1) },
-    { pin:39, keycode:QB_GENKCODE(5,2) },
-    { pin:40, keycode:QB_GENKCODE(5,3) },
-    { pin:41, keycode:QB_GENKCODE(5,4) },
+    // answer keys for question  #4
+    { pin:38, keycode:QB_GENKCODE(4,4) },
+    { pin:39, keycode:QB_GENKCODE(4,3) },
+    { pin:40, keycode:QB_GENKCODE(4,2) },
+    { pin:41, keycode:QB_GENKCODE(4,1) },
 
-    // answer keys for question #6
-    { pin:42, keycode:QB_GENKCODE(6,1) },
-    { pin:43, keycode:QB_GENKCODE(6,2) },
-    { pin:44, keycode:QB_GENKCODE(6,3) },
-    { pin:45, keycode:QB_GENKCODE(6,4) },
+    // answer keys for question  #3
+    { pin:42, keycode:QB_GENKCODE(3,4) },
+    { pin:43, keycode:QB_GENKCODE(3,3) },
+    { pin:44, keycode:QB_GENKCODE(3,2) },
+    { pin:45, keycode:QB_GENKCODE(3,1) },
 
-    // answer keys for question #7
-    { pin:46, keycode:QB_GENKCODE(7,1) },
-    { pin:47, keycode:QB_GENKCODE(7,2) },
-    { pin:48, keycode:QB_GENKCODE(7,3) },
-    { pin:49, keycode:QB_GENKCODE(7,4) },
+    // answer keys for question  #2
+    { pin:46, keycode:QB_GENKCODE(2,4) },
+    { pin:47, keycode:QB_GENKCODE(2,3) },
+    { pin:48, keycode:QB_GENKCODE(2,2) },
+    { pin:49, keycode:QB_GENKCODE(2,1) },
 
-    // answer keys for question #8
-    { pin:50, keycode:QB_GENKCODE(8,1) },
-    { pin:51, keycode:QB_GENKCODE(8,2) },
-    { pin:52, keycode:QB_GENKCODE(8,3) },
-    { pin:53, keycode:QB_GENKCODE(8,4) },
+    // answer keys for question  #1
+    { pin:50, keycode:QB_GENKCODE(1,4) },
+    { pin:51, keycode:QB_GENKCODE(1,3) },
+    { pin:52, keycode:QB_GENKCODE(1,2) },
+    { pin:53, keycode:QB_GENKCODE(1,1) },
 
     // other (regular) keys
     { pin:8, keycode:KEY_START },
