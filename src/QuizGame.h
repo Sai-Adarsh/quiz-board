@@ -80,6 +80,7 @@ class QuizGame
     int m_GivenAnswer[CFG_MAX_QUESTIONS];	// the given answers. 0=unanswered
     int m_NumUnAnswered;			// number of questions without an answer
     int m_UseSet;				// used answer set
+    bool m_GameRunning;
     SimpleLogging m_dbg;
 
 /* --------------------------------------------
@@ -97,6 +98,7 @@ class QuizGame
     bool giveAnswer ( int question, int answer );
     int questionAnswered ( int question );
     bool success ( void );
+    bool gameRunning (void) {return m_GameRunning;};
 };
 
 
@@ -117,6 +119,7 @@ QuizGame::QuizGame()
 
 void QuizGame::stopGame ( void )
 {
+    m_GameRunning = false;
     m_UseSet = 0;
     m_NumUnAnswered = CFG_MAX_QUESTIONS;
     for ( int i=0; i<CFG_MAX_QUESTIONS; i++ )
@@ -136,6 +139,7 @@ void QuizGame::startGame ( int AnswerSet )
     m_NumUnAnswered = CFG_MAX_QUESTIONS;
     for ( int i=0; i<CFG_MAX_QUESTIONS; i++ )
 	m_GivenAnswer[i] = 0;
+    m_GameRunning = true;
 }
 
 /* Returns true is the game is finished. The game is finished, if there
@@ -153,6 +157,11 @@ bool QuizGame::gameFinished ( void )
  */
 bool QuizGame::giveAnswer ( int question, int answer )
 {
+    if ( !m_GameRunning )
+    {
+	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGame::giveAnswer: Game not running.");
+	return false;
+    }
     if ( question<=0 || question>CFG_MAX_QUESTIONS )
     {
 	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGame::giveAnswer: invalid question.");
@@ -220,7 +229,7 @@ bool QuizGame::success ( void )
 {
     for ( int i=1; i<=CFG_MAX_QUESTIONS; i++ )
     {
-	if ( questionAnswered(i)!=2 )
+	if ( questionAnswered(i)!=RES_CORRECT )
 	    return false;
     }
     return true;
@@ -230,7 +239,7 @@ bool QuizGame::success ( void )
 QuizGame::SolutionSet QuizGame::m_SolutionSet[CFG_MAX_SOLUTIONSETS] =
 {
 #ifdef DEBUG
-    // these sets are just debbuging sets...
+    // these sets are just debugging sets...
     {1,2,3,4,1,2,3,4},
     {4,3,2,1,4,3,2,1},
     {1,2,1,2,3,4,3,4},
