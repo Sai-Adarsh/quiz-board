@@ -31,6 +31,9 @@
 #define DEBUG 1
 
 
+#define APP_VERSION  "1.0"
+
+
 /*             .-----------------------------------------------.             */
 /* ___________/  CONFIGURATION OF THE SOURCE                    \___________ */
 /*            `-------------------------------------------------'            */
@@ -39,6 +42,15 @@
 #define CFG_MAX_ANSWERS       4
 #define CFG_MAX_QUESTIONS     8
 #define CFG_MAX_SOLUTIONSETS  4
+
+#define CFG_WANT_GAME_TIMEOUT 1
+#if CFG_WANT_GAME_TIMEOUT
+#  define CFG_GAME_TIMEOUT		(3*60)		// 3 minutes game play (22s per answer)
+#  define CFG_GAME_TIMEOUT_WARN		(2*60)		// warn after 2 minutes
+#endif
+
+#define CFG_RESULT_TIMEOUT		(30)		// show result for 1/2 minute
+
 
 //}}}
 
@@ -55,7 +67,7 @@
 /*  Module "SimpleTimer"
  */
 // the maximum number of concurrently running timers.
-//#define SZ_QB_MAX_TIMERS 5
+#define SZ_QB_MAX_TIMERS 8
 
 //}}}
 

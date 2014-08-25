@@ -148,6 +148,8 @@ class QuizBoard
 
     bool setup ( void );
 
+    void disableLEDs ( void );
+
     void setLED ( int nr, bool new_state );
 
     void showAnswer ( int question, int AnswerState );
@@ -222,6 +224,14 @@ bool QuizBoard::setup ( void )
     }
 
     return true;
+}
+
+void QuizBoard::disableLEDs ( void )
+{
+    for ( int i=0; i<NumOfLEDs; i++ )
+    {
+	digitalWrite(ListOfLEDs[i],HIGH);         // disable LED
+    }
 }
 
 /* Simple set one of the LEDs.
@@ -304,9 +314,13 @@ int QuizBoard::waitKey (void)
     if ( CurrentKeyPressed != KEY_NONE )
     {
         kstate = digitalRead(ListOfKeys[CurrentKeyPressed].pin);
-        //m_dbg.log(SimpleLogging::LVL_DEBUG,"rel?=%d",CurrentKeyPressed);
+        //m_dbg.log(SimpleLogging::LVL_DEBUG,"**rel?=%d",CurrentKeyPressed);
         if ( kstate == HIGH )
+        {
+            //m_dbg.log(SimpleLogging::LVL_DEBUG,"**release=#%d",CurrentKeyPressed);
 	    CurrentKeyPressed = KEY_NONE;
+            CurrentKeyChecked = KEY_NONE;
+        }
         return KEY_NONE;                             // still pressed, so there's no change.
     }
     else
@@ -322,7 +336,7 @@ int QuizBoard::waitKey (void)
                 if ( kstate == LOW )
                 {
                     // stop searching, we have found a candidate.
-                    //m_dbg.log(SimpleLogging::LVL_DEBUG,"new?=%d",i);
+                    //m_dbg.log(SimpleLogging::LVL_DEBUG,"**new?=%d",i);
                     CurrentKeyChecked = i;
                     return KEY_NONE;                       // still not "officially" pressed..
                 }
@@ -341,73 +355,75 @@ int QuizBoard::waitKey (void)
             {
                 // the key isn't pressed anymore
                 CurrentKeyChecked = KEY_NONE;
-                //m_dbg.log(SimpleLogging::LVL_DEBUG,"lost=%d",i);
+                //m_dbg.log(SimpleLogging::LVL_DEBUG,"**lost=%d",i);
             }
         }
     }
-    return CurrentKeyPressed;
+    //if ( CurrentKeyPressed != KEY_NONE )
+    //    m_dbg.log(SimpleLogging::LVL_DEBUG,"**pressed=#%d",CurrentKeyPressed);
+    return ListOfKeys[CurrentKeyPressed].keycode;
 }
 
 /* generate a keycode out of the question and answer numbers.
  * Both parameters are counting from 1 but stored counting from 0!
  */
-#define QB_GENKCODE(question,answer) (((((question)&0x0007)-1)<<2)|(((answer)&0x0003)-1))
+#define QB_GENKCODE(question,answer) (((((question)-1)&0x0007)<<2)|(((answer)-1)&0x0003))
 
 /* List of pin numbers with all the keys. The order must match the key
  * code of the enum QuizBoard::KEY!
  */
 QuizBoard::KeyDefinition QuizBoard::ListOfKeys[] =
 {
-    // answer keys for question #1
-    { pin:22, keycode:QB_GENKCODE(1,1) },
-    { pin:23, keycode:QB_GENKCODE(1,2) },
-    { pin:24, keycode:QB_GENKCODE(1,3) },
-    { pin:25, keycode:QB_GENKCODE(1,4) },
+    // answer keys for question  #8
+    { pin:22, keycode:QB_GENKCODE(8,4) },
+    { pin:23, keycode:QB_GENKCODE(8,3) },
+    { pin:24, keycode:QB_GENKCODE(8,2) },
+    { pin:25, keycode:QB_GENKCODE(8,1) },
 
-    // answer keys for question #2
-    { pin:26, keycode:QB_GENKCODE(2,1) },
-    { pin:27, keycode:QB_GENKCODE(2,2) },
-    { pin:28, keycode:QB_GENKCODE(2,3) },
-    { pin:29, keycode:QB_GENKCODE(2,4) },
+    // answer keys for question  #7
+    { pin:26, keycode:QB_GENKCODE(7,4) },
+    { pin:27, keycode:QB_GENKCODE(7,3) },
+    { pin:28, keycode:QB_GENKCODE(7,2) },
+    { pin:29, keycode:QB_GENKCODE(7,1) },
 
-    // answer keys for question #3
-    { pin:30, keycode:QB_GENKCODE(3,1) },
-    { pin:31, keycode:QB_GENKCODE(3,2) },
-    { pin:32, keycode:QB_GENKCODE(3,3) },
-    { pin:33, keycode:QB_GENKCODE(3,4) },
+    // answer keys for question  #6
+    { pin:30, keycode:QB_GENKCODE(6,4) },
+    { pin:31, keycode:QB_GENKCODE(6,3) },
+    { pin:32, keycode:QB_GENKCODE(6,2) },
+    { pin:33, keycode:QB_GENKCODE(6,1) },
 
-    // answer keys for question #4
-    { pin:34, keycode:QB_GENKCODE(4,1) },
-    { pin:35, keycode:QB_GENKCODE(4,2) },
-    { pin:36, keycode:QB_GENKCODE(4,3) },
-    { pin:37, keycode:QB_GENKCODE(4,4) },
+    // answer keys for question  #5
+    { pin:34, keycode:QB_GENKCODE(5,4) },
+    { pin:35, keycode:QB_GENKCODE(5,3) },
+    { pin:36, keycode:QB_GENKCODE(5,2) },
+    { pin:37, keycode:QB_GENKCODE(5,1) },
 
-    // answer keys for question #5
-    { pin:38, keycode:QB_GENKCODE(5,1) },
-    { pin:39, keycode:QB_GENKCODE(5,2) },
-    { pin:40, keycode:QB_GENKCODE(5,3) },
-    { pin:41, keycode:QB_GENKCODE(5,4) },
+    // answer keys for question  #4
+    { pin:38, keycode:QB_GENKCODE(4,4) },
+    { pin:39, keycode:QB_GENKCODE(4,3) },
+    { pin:40, keycode:QB_GENKCODE(4,2) },
+    { pin:41, keycode:QB_GENKCODE(4,1) },
 
-    // answer keys for question #6
-    { pin:42, keycode:QB_GENKCODE(6,1) },
-    { pin:43, keycode:QB_GENKCODE(6,2) },
-    { pin:44, keycode:QB_GENKCODE(6,3) },
-    { pin:45, keycode:QB_GENKCODE(6,4) },
+    // answer keys for question  #3
+    { pin:42, keycode:QB_GENKCODE(3,4) },
+    { pin:43, keycode:QB_GENKCODE(3,3) },
+    { pin:44, keycode:QB_GENKCODE(3,2) },
+    { pin:45, keycode:QB_GENKCODE(3,1) },
 
-    // answer keys for question #7
-    { pin:46, keycode:QB_GENKCODE(7,1) },
-    { pin:47, keycode:QB_GENKCODE(7,2) },
-    { pin:48, keycode:QB_GENKCODE(7,3) },
-    { pin:49, keycode:QB_GENKCODE(7,4) },
+    // answer keys for question  #2
+    { pin:46, keycode:QB_GENKCODE(2,4) },
+    { pin:47, keycode:QB_GENKCODE(2,3) },
+    { pin:48, keycode:QB_GENKCODE(2,2) },
+    { pin:49, keycode:QB_GENKCODE(2,1) },
 
-    // answer keys for question #8
-    { pin:50, keycode:QB_GENKCODE(8,1) },
-    { pin:51, keycode:QB_GENKCODE(8,2) },
-    { pin:52, keycode:QB_GENKCODE(8,3) },
-    { pin:53, keycode:QB_GENKCODE(8,4) },
+    // answer keys for question  #1
+    { pin:50, keycode:QB_GENKCODE(1,4) },
+    { pin:51, keycode:QB_GENKCODE(1,3) },
+    { pin:52, keycode:QB_GENKCODE(1,2) },
+    { pin:53, keycode:QB_GENKCODE(1,1) },
 
-    // other LEDs
-    { pin:53, keycode:KEY_START },
+    // other (regular) keys
+    { pin:8, keycode:KEY_START },
 
     { pin:-1, keycode:-1 }
 };
@@ -423,7 +439,7 @@ int QuizBoard::ListOfLEDs [] =
     // "green" LEDs for correct answers
     A8, A9, A10, A11, A12, A13, A14, A15,
     // other LEDs
-    11, 13,
+    11, 13,					// LED_STATUS, LED_ALIVE
     -1
 };
 
