@@ -59,14 +59,11 @@
 #ifndef CFG_MAX_SOLUTIONSETS
 #  error "fatal: CFG_MAX_SOLUTIONSETS must be defined in config.h"
 #endif
-
-#if CFG_WANT_GAME_TIMEOUT
-#  ifndef CFG_GAME_TIMEOUT_WARN
-#    error "fatal: CFG_GAME_TIMEOUT_WARN must be defined in config.h"
-#  endif
-#  ifndef CFG_GAME_TIMEOUT
+#ifndef CFG_GAME_TIMEOUT_WARN
+#  error "fatal: CFG_GAME_TIMEOUT_WARN must be defined in config.h"
+#endif
+#ifndef CFG_GAME_TIMEOUT
 #    error "fatal: CFG_GAME_TIMEOUT must be defined in config.h"
-#  endif
 #endif
 
 
@@ -82,13 +79,20 @@ class QuizGameController
   protected:
     enum GAME_STATES { GS_IDLE=0, GS_RUNNING, GS_GAME_DONE };
     enum STATE_PARMS { SP_NONE=0, SP_NEW_GAME, SP_GAME_WON, SP_GAME_LOST, SP_GAME_ABORT };
-    enum GAME_TIMERS { EV_INVALID=0, EV_RUNNING, EV_RESULT, EV_TIMEOUT_WARN, EV_GAME_TIMEOUT };
+    enum GAME_TIMERS { EV_INVALID=0, EV_RUNNING, EV_RESULT, EV_TIMEOUT_WARN, EV_GAME_TIMEOUT, EV_RESULT_TIMEOUT };
 
   /* --------------------------------------------
    * constants declarations
    */
   //private:
   //public:
+
+  /* --------------------------------------------
+   * configuration
+   */
+  protected:
+    bool m_WantResultAnimation;
+    bool m_WantGameTimeout;
 
   /* --------------------------------------------
    * local attributes
@@ -121,6 +125,8 @@ class QuizGameController
     void dispatchEvents ( void );
     void switchState ( int NewState, int StateParm );
     void setAliveState ( bool val );
+    void configSetResultAnimation ( bool flag ) { m_WantResultAnimation=flag; };
+    void configSetGameTimeout ( bool flag ) { m_WantGameTimeout=flag; };
 };
 
 
@@ -136,7 +142,10 @@ QuizGameController::QuizGameController()
 #else
     m_dbg.setLevel(SimpleLogging::LVL_WARNING);
 #endif
+    m_dbg.log(SimpleLogging::LVL_INFO,"QuizBoard %s",APP_VERSION);
     m_StatusLedState = false;
+    m_WantResultAnimation = false;
+    m_WantGameTimeout = false;
 }
 
 bool QuizGameController::setup ( void )
@@ -147,7 +156,8 @@ bool QuizGameController::setup ( void )
     m_GameWon = false;
     m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::setup");
     rc = m_Board.setup();
-    //~ if ( !rc ) return false;
+    m_Board.disableLEDs();
+    m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
     return rc;
 }
 
@@ -169,10 +179,17 @@ void QuizGameController::dispatchEvents ( void )
     if ( kcode != QuizBoard::KEY_NONE )
     {
         m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::dispatchEvents key=%d",kcode);
-        q = m_Board.isQuestion(kcode);
-        a = m_Board.isAnswer(kcode);
-        m_dbg.log(SimpleLogging::LVL_DEBUG,"Question %d is answered with %d",q,a);
-	handleAnswerKey(q,a);
+        if ( !m_Board.isRegularKey(kcode) )
+	{
+	    q = m_Board.isQuestion(kcode);
+	    a = m_Board.isAnswer(kcode);
+	    m_dbg.log(SimpleLogging::LVL_DEBUG,"Question %d is answered with %d",q,a);
+	    handleAnswerKey(q,a);
+	}
+	else
+	{
+	    handleKey(kcode);
+	}
     }
     if ( m_Tick.dispatch() )
     {
@@ -187,10 +204,8 @@ void QuizGameController::dispatchEvents ( void )
 
 void QuizGameController::handleAnswerKey ( int question, int answer )
 {
-    bool rc;
     m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::handleAnswerKey(%d,%d)",question,answer);
-    rc = m_Game.giveAnswer(question,answer);
-    if ( rc )
+    if ( m_Game.giveAnswer(question,answer) )
     {
 	// If the answer was OK, we have to check the result. We must set
 	// the LEDs according to this result.
@@ -204,14 +219,15 @@ void QuizGameController::handleAnswerKey ( int question, int answer )
 	{
 	    m_Board.showAnswer(question,QuizBoard::ANS_WRONG);
 	}
+	else
+	    m_dbg.log(SimpleLogging::LVL_INFO,"handleAnswerKey: answer not accepted!");
 
 	// OK, let's see if this was the last answer. If so, we have to check
 	// if we won or lost this game.
 	//
 	if ( m_Game.gameFinished() )
 	{
-	    rc = m_Game.success();
-	    switchState(GS_GAME_DONE,rc?SP_GAME_WON:SP_GAME_LOST);
+	    switchState(GS_GAME_DONE,m_Game.success()?SP_GAME_WON:SP_GAME_LOST);
 	}
     }
 }
@@ -222,13 +238,19 @@ void QuizGameController::handleTimerEvent ( int ev )
     switch ( ev )
     {
         case EV_RUNNING:
-            m_StatusLedState = !m_StatusLedState;
-            m_Board.setLED(QuizBoard::LED_STATUS,m_StatusLedState);
+//            if ( m_Game.gameRunning() )
+//            {
+		m_StatusLedState = !m_StatusLedState;
+		m_Board.setLED(QuizBoard::LED_STATUS,m_StatusLedState);
+//	    }
             break;
+
         case EV_RESULT:
             m_StatusLedState = !m_StatusLedState;
 	    if ( m_GameWon )
 	    {
+		// Or should we use m_Game.questionAnswered(i)==RES_CORRECT to
+		// only let the correct LEDs flash?
 		m_Board.setLED(QuizBoard::LED_GREEN1,m_StatusLedState);
 		m_Board.setLED(QuizBoard::LED_GREEN2,m_StatusLedState);
 		m_Board.setLED(QuizBoard::LED_GREEN3,m_StatusLedState);
@@ -240,6 +262,8 @@ void QuizGameController::handleTimerEvent ( int ev )
 	    }
 	    else
 	    {
+		// Or should we use m_Game.questionAnswered(i)==RES_WRONG to
+		// only let the wrong LEDs flash?
 		m_Board.setLED(QuizBoard::LED_RED1,m_StatusLedState);
 		m_Board.setLED(QuizBoard::LED_RED2,m_StatusLedState);
 		m_Board.setLED(QuizBoard::LED_RED3,m_StatusLedState);
@@ -251,15 +275,22 @@ void QuizGameController::handleTimerEvent ( int ev )
 	    }
 	    m_Board.setLED(QuizBoard::LED_STATUS,!m_StatusLedState);
             break;
+
         case EV_TIMEOUT_WARN:
             m_dbg.log(SimpleLogging::LVL_DEBUG,"EV_TIMEOUT_WARN: some left!");
             m_Tick.addTimer(EV_RUNNING,1,true);            // make blinking faster
             break;
+
         case EV_GAME_TIMEOUT:
 	    // abort the game.
             m_dbg.log(SimpleLogging::LVL_DEBUG,"EV_GAME_TIMEOUT: abort game");
 	    switchState(GS_GAME_DONE,SP_GAME_ABORT);
             break;
+
+	case EV_RESULT_TIMEOUT:
+	    switchState(GS_IDLE,SP_NONE);
+	    break;
+
         default:
             m_dbg.log(SimpleLogging::LVL_INFO,"ev=%d",ev);
     }
@@ -293,27 +324,38 @@ void QuizGameController::switchState ( int NewState, int StateParm )
     switch ( NewState )
     {
 	case GS_IDLE:
+	    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: idle now");
 	    m_State = NewState;
+	    m_Board.disableLEDs();
+	    m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
+	    // may go into power-safe here?
 	    break;
+
 	case GS_RUNNING:
 	    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: new game");
 	    if ( StateParm == SP_NEW_GAME )
 	    {
 		m_Tick.addTimer(EV_RUNNING,2,true);
-#if CFG_WANT_GAME_TIMEOUT
-		m_Tick.addTimer(EV_TIMEOUT_WARN,CFG_GAME_TIMEOUT_WARN);
-		m_Tick.addTimer(EV_GAME_TIMEOUT,CFG_GAME_TIMEOUT);
-#endif
+		if ( m_WantGameTimeout )
+		{
+		    m_Tick.addTimer(EV_TIMEOUT_WARN,CFG_GAME_TIMEOUT_WARN);
+		    m_Tick.addTimer(EV_GAME_TIMEOUT,CFG_GAME_TIMEOUT);
+		}
 	    }
+	    m_Tick.killTimer(EV_RESULT_TIMEOUT);
+	    m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
 	    m_Game.startGame(0);	// for now only set #0
 	    m_State = NewState;
 	    break;
+
 	case GS_GAME_DONE:
 	    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: game done");
-#if CFG_WANT_GAME_TIMEOUT
-            m_Tick.killTimer(EV_TIMEOUT_WARN);
-	    m_Tick.killTimer(EV_GAME_TIMEOUT);
-#endif
+	    if ( m_WantGameTimeout )
+	    {
+		// kill the timer of the runtime observation.
+		m_Tick.killTimer(EV_TIMEOUT_WARN);
+		m_Tick.killTimer(EV_GAME_TIMEOUT);
+	    }
 	    if ( StateParm == SP_GAME_ABORT )
 	    {
 		m_Tick.addTimer(EV_RUNNING,5,true);	// totally slow blinking
@@ -323,22 +365,32 @@ void QuizGameController::switchState ( int NewState, int StateParm )
 		m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: WON");
 		// visualize WON
 		m_GameWon = true;
-		m_Board.disableLEDs();
-		m_Tick.killTimer(EV_RUNNING);
-		m_Tick.addTimer(EV_RESULT,1,true);
+		if ( m_WantResultAnimation )
+		{
+		    m_Board.disableLEDs();
+		    m_Tick.killTimer(EV_RUNNING);
+		    m_Tick.addTimer(EV_RESULT,1,true);
+		}
+		else
+		    m_Board.setLED(QuizBoard::LED_STATUS,LOW);
 	    }
 	    else if ( StateParm == SP_GAME_LOST )
 	    {
 		m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: LOST");
 		// visualize LOST
 		m_GameWon = false;
-		m_Board.disableLEDs();
-		m_Tick.killTimer(EV_RUNNING);
-		m_Tick.addTimer(EV_RESULT,1,true);
+		if ( m_WantResultAnimation )
+		{
+		    m_Board.disableLEDs();
+		    m_Tick.killTimer(EV_RUNNING);
+		    m_Tick.addTimer(EV_RESULT,1,true);
+		}
+		else
+		    m_Board.setLED(QuizBoard::LED_STATUS,LOW);
 	    }
 	    m_Game.stopGame();
 	    m_State = NewState;
-	    // TODO: may start a timer to go in powerdown?
+	    m_Tick.addTimer(EV_RESULT_TIMEOUT,CFG_RESULT_TIMEOUT);
 	    break;
 #ifdef DEBUG
 	default:
