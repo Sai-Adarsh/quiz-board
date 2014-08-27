@@ -34,12 +34,6 @@ behind the branch.
 Each of these temporary branches will have a well defined prefix in the name.
 This prefix reflects the category of the branch.
 
-* ``release-`` is used for *release branches*. If the development is
-ready for a new version of the code, a *release branch* is split of of the
-*develop branch*. If this *release candidate* is ready to be the new
-version, this branch is merged as final code into master and into develop.
-This way, fixes done within the release cicle are merged back to develop.
-
 * ``fix-`` is used for *bug fix branches*. The remaining part of the branch
 is either the issue number of the GIThub project or a descriptive text.
 
