@@ -1,6 +1,6 @@
 % Anleitung zum "Quiz-Board"
 % Joerg Desch (https://github.com/joede/quiz-board)
-% Revision R.1
+% Revision R.2
 
 # Über das Dokument
 
@@ -26,7 +26,7 @@ Zur Zeit sind folgende Einschränkungen vorhanden:
 
 * jede Frage muss immer vier Antworten haben
 * ein Quiz besteht immer aus genau acht Fragen
-* die optionale Maximaldauer liegt fix bei zwei Minuten.
+* die optionale Maximaldauer liegt fix bei drei Minuten.
 
 
 # Details zur Umsetzung
@@ -49,7 +49,8 @@ Eine Reihenfolge beim Beantworten der Fragen muss *nicht* eingehalten werden.
 
 Abseits dieser Tasten und LEDs befindet sich der Start-Knopf. Dieser startet
 ein neues Quiz. Ein laufender Durchgang wird hiermit ohne weitere Rückfrage
-abgebrochen.
+abgebrochen. Nach dem Abbruch ist ein erneutes Starten möglich.
+
 
 ## Abfrage einer Antwort
 
@@ -62,23 +63,28 @@ Das Ergebnis wird umgehend angezeigt. Die richtige Antwort wird durch eine
 grüne LED angezeigt, die Falsche durch eine rote LED. Die jeweilige LED leuchtet
 dauerhaft.
 
+
 ## Betriebsmodus und dessen Anzeige
 
-Der Betrieb der Anlage wird durch eine gelbe LED angezeigt. Diese LED zeigt
-durch ihr Blinken den jeweiligen Betriebszustand an. Ist die LED aus, so ist
-auch das System ausgeschaltet.
+Der Betrieb der Anlage wird durch eine gelbe LED angezeigt. Diese "Status" LED zeigt
+durch ihr Blinken den jeweiligen Betriebszustand an.
+
+* ist die dauerhaft LED an, befindet sich das System im Bereitschaftmodus (Idle).
+* blinkt die LED, dann ist ein Quiz am laufen.
+* ist die LED aus, so ist auch das System ausgeschaltet.
 
 **Hinweis:** das System verfügt über einen eigenen Netzschalter, mit dem die
 Spannungsversorgung komplett getrennt werden kann. Siehe Abschnitt
 *"Spannungsversorgung"*.
 
+
 ### Zustand "Idle"
 
 Nach dem Einschalten wartet das System auf den Start eines Quiz (Idle). Um
-dies anzuzeigen, blinkt die gelbe LED. Damit dies nicht zu viel Batterieladung
-verbraucht, blinkt die LED zu kurz auf. Es wird ein 1:5 Verhältnis verwendet.
-Die LED ist für 1/5 Sekunde an und für 4/5 Sekunden aus.
+dies anzuzeigen, ist die gelbe LED dauerhaft an.
 
+
+<!-- ZRU ZEIT NICHT UMGESETZT
 ### Zustand "Stromsparen"
 
 Wird im Zustand "Idle" nicht innerhalb einer Minute das Quiz gestartet, schaltet
@@ -92,6 +98,8 @@ ein Quiz gestartet werden.
 
 Dieses Abschalten wird nicht visualisiert. Da Energie gespart werden soll, wird
 keine LED zur Anzeige verwendet.
+-->
+
 
 ### Zustand "Abfrage"
 
@@ -99,42 +107,44 @@ Der Zustand "Abfrage" ist der normale "laufende Betrieb". Das bedeutet, dass
 das Quiz aktiv ist. Dieser Zustand wird durch eine gleichmäßig (1:1)
 blinkende gelbe LED anzeigt.
 
-Wenn die maximale Zeit für das Quiz aktiviert ist, beginnt die gelbe LED ca.
-15% vor Ablauf der Maximaldauer schneller zu blinken. Die Puls-Pausen-Zeit
-wechselt von einer Sekunde auf eine halbe Sekunde.
+Wenn die *Maximaldauer* für das Quiz aktiviert ist, beginnt die gelbe LED ca.
+30% vor Ablauf der Maximaldauer schneller zu blinken. Dies ist aber nur dezent
+umgesetzt, sodass es den Anwender nicht stören sollte.
 
-> **Hinweis:** Zur Zeit ist noch nicht definiert, wie eine Maximaldauer verändert
-> werden kann. Aus dem Grund beträgt die Vorgabe zwei Minuten. Somit beginnt die
-> LED 18 Sekunden (15%) vor dem Ablaufen an schneller zu blinken.
+> **Hinweis:** Zur Zeit ist diese Funktionalität nicht aktiviert! Die Implementation
+> sieht eine maximale Laufzeit von 3 Minuten zur Beanwortung der 8 Fragen vor.
+> Dies bedeutet, dass im Schnitt 22 Sekunden pro Frage möglich sind. Nach
+> 2 Minuten beginnt die LED schneller zu blinken.
+
 
 ### Zustand "Ergebnis"
 
 Ist die letzte Frage beantwortet, wird in den Zustand "Ergebnis" gewechselt.
-Die Funktion dieses Zustands ist einzig die Anzeige des Resultats. Sind alle
-Fragen richtig beantwortet, fangen alle grünen LED an im Gleichtakt (1:1)
-zu blinken.
+Die Funktion dieses Zustands ist einzig die Anzeige des Resultats.
 
-Sind nicht alle Antworten korrekt, blinken alle roten LED im Gleichtakt (1:1).
+> **Hinweis:** Zur Zeit ist die Animation des Ergebnisses nicht aktiviert!
+> Für den Fall einer aktiven Animation, ergibt sich folgendes Bild. Sind alle
+> Fragen richtig beantwortet, fangen alle grünen LED an im Gleichtakt (1:1)
+> zu blinken. Sind nicht alle Antworten korrekt, blinken alle roten LED im
+> Gleichtakt (1:1).
 
-Die Anzeige des Resultats erfolgt maximal für 30 Sekunden. Danach wird das
-System automatisch abgeschaltet (Zustand "Stromsparen").
+Die Anzeige des Resultats erfolgt maximal für 30 Sekunden. Danach wechselt das
+System automatisch in den Zustand "Idle".
+
 
 ### Neustarten
 
-In jedem Zustand lässt sich das System mit der START-Taste erneut starten.
-Eventuell laufende Abfragen werden abgebrochen. Bei aktiver Zeitüberwachung
-beginnt die Zeitzählung sofort nach diesem Start.
-
+Im Prinzip lässt sich das System in jedem Zustand mit der START-Taste erneut
+starten. Ist zum Zeitpunkt des Neustarts eine Abfrage aktiv, wird diese mit dem
+ersten Tastendruck auf START zuerst abgebrochen. Das System wechselt in den
+Zustand "Ergebnis", sodass dem Benutzer noch Zeit bleibt, seine bisherigen
+Antworten zu begutachten.
 
 # Die Spannungsversorgung
 
 Das System wird wahlweise mit einem Steckernetzteil oder einem Batterieblock mit
 Akkus betrieben. Die Spannung wird über einen eigenen Kippschalter geschaltet,
 sodass sich das System komplett von der Spannungsversorgung trennen lässt.
-
-Bei eingeschaltetem System verfällt der Microcontroller bei Inaktivität in
-einen Stromsparmodus, in dem die Batterie fast nicht entladen wird. Siehe
-Abschnitt *"Zustand 'Stromsparen'"*.
 
 
 # Historie des Dokuments
@@ -146,3 +156,6 @@ Abschnitt *"Zustand 'Stromsparen'"*.
 :    Freigabe der hier beschriebenen Funktionalität. Die Umsetzung der
      erweiterten Funktionen sind optional und hängen von der zur Verfügung
      stehenden Zeit ab. (26.5.2013/jd)
+
+**R.2**
+:    Version 1.0 der Firmware fertiggestellt.
