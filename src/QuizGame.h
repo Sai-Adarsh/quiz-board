@@ -159,7 +159,7 @@ bool QuizGame::giveAnswer ( int question, int answer )
 {
     if ( !m_GameRunning )
     {
-	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGame::giveAnswer: Game not running.");
+	m_dbg.log(SimpleLogging::LVL_WARNING,"QuizGame::giveAnswer: Game not running.");
 	return false;
     }
     if ( question<=0 || question>CFG_MAX_QUESTIONS )

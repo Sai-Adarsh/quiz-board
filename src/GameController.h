@@ -101,6 +101,8 @@ class QuizGameController
     int m_State;
     bool m_StatusLedState;
     bool m_GameWon;
+    bool m_ClearAllLEDs;
+    int m_UseSolutionSet;
     SimpleLogging m_dbg;
     SimpleTimer m_Tick;
     QuizBoard m_Board;
@@ -125,6 +127,8 @@ class QuizGameController
     void dispatchEvents ( void );
     void switchState ( int NewState, int StateParm );
     void setAliveState ( bool val );
+    void setLogLevel ( int level ) {m_dbg.setLevel(level);};
+    void configSolutionSet ( int NewSet );
     void configSetResultAnimation ( bool flag ) { m_WantResultAnimation=flag; };
     void configSetGameTimeout ( bool flag ) { m_WantGameTimeout=flag; };
 };
@@ -142,8 +146,11 @@ QuizGameController::QuizGameController()
 #else
     m_dbg.setLevel(SimpleLogging::LVL_WARNING);
 #endif
-    m_dbg.log(SimpleLogging::LVL_INFO,"QuizBoard %s",APP_VERSION);
+    // not possible here, because the serial port isn't configured yet!
+    // m_dbg.log(SimpleLogging::LVL_INFO,"QuizBoard %s",APP_VERSION);
+    m_UseSolutionSet = 0;
     m_StatusLedState = false;
+    m_ClearAllLEDs = false;
     m_WantResultAnimation = false;
     m_WantGameTimeout = false;
 }
@@ -151,14 +158,26 @@ QuizGameController::QuizGameController()
 bool QuizGameController::setup ( void )
 {
     bool rc = true;
+    m_dbg.log(SimpleLogging::LVL_INFO,"QuizBoard %s",APP_VERSION);
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::setup");
     m_State = GS_IDLE;
     m_StatusLedState = false;
     m_GameWon = false;
-    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::setup");
     rc = m_Board.setup();
     m_Board.disableLEDs();
     m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
     return rc;
+}
+
+
+void QuizGameController::configSolutionSet ( int NewSet )
+{
+    if ( NewSet<0 || NewSet>=CFG_MAX_SOLUTIONSETS )
+    {
+	m_dbg.log(SimpleLogging::LVL_ERROR,"QuizGameController::configSolutionSet: invalid AnswerSet!");
+	return;
+    }
+    m_UseSolutionSet = NewSet;
 }
 
 void QuizGameController::setAliveState ( bool val )
@@ -232,9 +251,31 @@ void QuizGameController::handleAnswerKey ( int question, int answer )
     }
 }
 
+void QuizGameController::handleKey ( int kcode )
+{
+    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::handleKey(%d)",kcode);
+    switch ( kcode)
+    {
+	case QuizBoard::KEY_START:
+            m_Tick.killTimer(EV_RESULT);
+	    if ( m_State == GS_RUNNING )
+	    {
+		// abort running game and switch do GS_GAME_DONE
+		m_Game.stopGame();
+		switchState(GS_GAME_DONE,SP_GAME_ABORT);
+	    }
+            else
+	    {
+		// start a new game
+		switchState(GS_RUNNING,SP_NEW_GAME);
+	    }
+	    break;
+    }
+}
+
 void QuizGameController::handleTimerEvent ( int ev )
 {
-    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::handleTimerEvent(%d)",ev);
+    // m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::handleTimerEvent(%d)",ev);
     switch ( ev )
     {
         case EV_RUNNING:
@@ -246,6 +287,9 @@ void QuizGameController::handleTimerEvent ( int ev )
             break;
 
         case EV_RESULT:
+            if ( m_ClearAllLEDs )
+                m_Board.disableLEDs();
+            m_ClearAllLEDs = false;
             m_StatusLedState = !m_StatusLedState;
 	    if ( m_GameWon )
 	    {
@@ -288,33 +332,12 @@ void QuizGameController::handleTimerEvent ( int ev )
             break;
 
 	case EV_RESULT_TIMEOUT:
+            m_dbg.log(SimpleLogging::LVL_DEBUG,"EV_RESULT_TIMEOUT: go idle");
 	    switchState(GS_IDLE,SP_NONE);
 	    break;
 
         default:
             m_dbg.log(SimpleLogging::LVL_INFO,"ev=%d",ev);
-    }
-}
-
-void QuizGameController::handleKey ( int kcode )
-{
-    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::handleKey(%d)",kcode);
-    switch ( kcode)
-    {
-	case QuizBoard::KEY_START:
-            m_Tick.killTimer(EV_RESULT);
-	    if ( m_State == GS_RUNNING )
-	    {
-		// abort running game and switch do GS_GAME_DONE
-		m_Game.stopGame();
-		switchState(GS_GAME_DONE,SP_GAME_ABORT);
-	    }
-            else
-	    {
-		// start a new game
-		switchState(GS_RUNNING,SP_NEW_GAME);
-	    }
-	    break;
     }
 }
 
@@ -326,6 +349,8 @@ void QuizGameController::switchState ( int NewState, int StateParm )
 	case GS_IDLE:
 	    m_dbg.log(SimpleLogging::LVL_DEBUG,"QuizGameController::switchState: idle now");
 	    m_State = NewState;
+            m_Tick.killTimer(EV_RESULT);
+            m_Tick.killTimer(EV_RUNNING);
 	    m_Board.disableLEDs();
 	    m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
 	    // may go into power-safe here?
@@ -342,8 +367,11 @@ void QuizGameController::switchState ( int NewState, int StateParm )
 		    m_Tick.addTimer(EV_GAME_TIMEOUT,CFG_GAME_TIMEOUT);
 		}
 	    }
+            m_Tick.killTimer(EV_RESULT);
 	    m_Tick.killTimer(EV_RESULT_TIMEOUT);
-	    m_Board.setLED(QuizBoard::LED_STATUS,HIGH);
+	    m_Board.disableLEDs();
+            m_StatusLedState = false;
+	    m_Board.setLED(QuizBoard::LED_STATUS,LOW);
 	    m_Game.startGame(0);	// for now only set #0
 	    m_State = NewState;
 	    break;
@@ -367,7 +395,7 @@ void QuizGameController::switchState ( int NewState, int StateParm )
 		m_GameWon = true;
 		if ( m_WantResultAnimation )
 		{
-		    m_Board.disableLEDs();
+		    m_ClearAllLEDs = true;
 		    m_Tick.killTimer(EV_RUNNING);
 		    m_Tick.addTimer(EV_RESULT,1,true);
 		}
@@ -381,7 +409,7 @@ void QuizGameController::switchState ( int NewState, int StateParm )
 		m_GameWon = false;
 		if ( m_WantResultAnimation )
 		{
-		    m_Board.disableLEDs();
+		    m_ClearAllLEDs = true;
 		    m_Tick.killTimer(EV_RUNNING);
 		    m_Tick.addTimer(EV_RESULT,1,true);
 		}

@@ -35,7 +35,6 @@ QuizGameController TheGame;
  * THE APP
  */
 
-#ifdef DEBUG
 void handleCommand ( char cmd )
 {
     int i;
@@ -43,7 +42,11 @@ void handleCommand ( char cmd )
     switch ( cmd )
     {
 	case '?':
+#ifdef DEBUG
 	    Serial.print("QuizBoard DEBUG V"); Serial.println(APP_VERSION);
+#else
+	    Serial.print("QuizBoard V"); Serial.println(APP_VERSION);
+#endif
 	    break;
 	case 'a':
 	    TheGame.configSetResultAnimation(false);
@@ -61,9 +64,12 @@ void handleCommand ( char cmd )
 	    TheGame.configSetGameTimeout(true);
 	    Serial.println("GameTimeout=true");
 	    break;
+        case 'd':
+            TheGame.setLogLevel(SimpleLogging::LVL_DEBUG);
+	    Serial.println("LogLevel=debug");
+            break;
     }
 }
-#endif
 
 void setup (void)
 {
@@ -74,7 +80,8 @@ void setup (void)
     TheGame.setup();
     // we could read a setup out of the EEPROM here...
     TheGame.configSetResultAnimation(false);
-    TheGame.configSetGameTimeout(true);
+    TheGame.configSetGameTimeout(false);
+    TheGame.configSolutionSet(0);
 }
 
 void loop (void)
@@ -85,11 +92,9 @@ void loop (void)
 
     /* HANDLE THE SERIAL PORT
      */
-#ifdef DEBUG
     if ( Serial.available() )
     {
 	char inChar = (char)Serial.read();
 	handleCommand(inChar);
     }
-#endif
 }

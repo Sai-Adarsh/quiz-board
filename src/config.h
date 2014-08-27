@@ -27,8 +27,10 @@
 #ifndef __QB__CONFIG_H__
 #define __QB__CONFIG_H__
 
-// uncomment to build the DEBUGGING release
-#define DEBUG 1
+/* Uncomment to build the DEBUGGING release. A debuggin release enables log
+ * messages, shortens timeouts and changes the solution set to a simple one.
+ */
+//#define DEBUG 1
 
 
 #define APP_VERSION  "1.0"
@@ -43,8 +45,10 @@
 #define CFG_MAX_QUESTIONS     8
 #define CFG_MAX_SOLUTIONSETS  4
 
-#define CFG_WANT_GAME_TIMEOUT 1
-#if CFG_WANT_GAME_TIMEOUT
+#if DEBUG
+#  define CFG_GAME_TIMEOUT		(30)		// DEBUG
+#  define CFG_GAME_TIMEOUT_WARN		(20)		// DEBUG
+#else
 #  define CFG_GAME_TIMEOUT		(3*60)		// 3 minutes game play (22s per answer)
 #  define CFG_GAME_TIMEOUT_WARN		(2*60)		// warn after 2 minutes
 #endif
